@@ -1,0 +1,17 @@
+#player {
+    display: flex;
+    align-content: start;
+}
+#video {
+    align-self: start;
+    width: 70%
+}
+#description {
+    margin: 1.5em
+}
+li > video {
+    width: 200px
+}
+li:hover {
+    cursor: pointer;
+}

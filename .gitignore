@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+static/videos.js
+static/*.mp4.gif
+videos/
+TAGS
