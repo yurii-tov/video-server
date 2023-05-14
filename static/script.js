@@ -22,7 +22,7 @@ function render_playlist()
         let li = document.createElement('li');
         let video = document.createElement('img');
         let text = document.createElement('pre');
-        video.src = '/static/' + v + '.gif';
+        video.src = '/static/videos/' + v + '.gif';
         text.innerHTML = v;
         li.onclick = function() {
             play(v)

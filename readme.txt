@@ -9,7 +9,7 @@
 
     
 * Add videos
-  1. mkdir videos
+  1. mkdir static/videos
   2. place .mp4 videos here
 
      
