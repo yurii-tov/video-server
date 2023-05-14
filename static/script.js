@@ -1,6 +1,6 @@
 function play(x)
 {
-    document.getElementById("video").src = '/video?name=' + x;
+    document.getElementById("video").src = '/video/' + x;
     document.getElementById("video").autoplay = true;
     document.getElementById("description").innerHTML = x;
 }

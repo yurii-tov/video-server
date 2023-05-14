@@ -30,14 +30,14 @@ def get_chunk(full_path, byte1=None, byte2=None):
 
 def prepare_videos():
     print('Making thumbnails...')
-    for x in glob.glob('static/videos/*.mp4'):
-        thumbnail = 'static/videos/{}.gif'.format(os.path.basename(x))
+    for x in glob.glob('static/**/*.mp4', recursive=True):
+        thumbnail = '{}.gif'.format(x)
         command = 'ffmpeg -hide_banner -loglevel error -y -ss 00:01:00 -t 5 -i {} -s 200x100 -r 5 {}'.format(x, thumbnail)
         os.path.exists(thumbnail) or os.system(command)
         print('   ', thumbnail)
 
     with open('static/videos.js', 'w') as s:
-        videos_list = json.dumps([os.path.basename(x) for x in glob.glob('static/videos/*.mp4')])
+        videos_list = json.dumps([x.replace('static/videos/', '') for x in glob.glob('static/**/*.mp4', recursive=True)])
         s.write('let videos = {};'.format(videos_list))
 
 
@@ -46,8 +46,8 @@ def main_page():
     return render_template('video.html')
 
 
-@app.route('/video')
-def get_file():
+@app.route('/video/<path:video_file>')
+def get_file(video_file):
     range_header = request.headers.get('Range', None)
     byte1, byte2 = 0, None
     if range_header:
@@ -59,10 +59,6 @@ def get_file():
         if groups[1]:
             byte2 = int(groups[1])
 
-
-    video_file = request.args.get('name')
-    if re.search('^[a-zA-Z0-9_]+.mp4$', video_file) is None:
-        raise Exception('Fuck that, i quit 🤲')
     video_file = 'static/videos/{}'.format(video_file)
     chunk, start, length, file_size = get_chunk(video_file, byte1, byte2)
     resp = Response(chunk, 206, mimetype='video/mp4',
