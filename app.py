@@ -28,22 +28,25 @@ def get_chunk(full_path, byte1=None, byte2=None):
     return chunk, start, length, file_size
 
 
+def get_videos():
+    return glob.glob('static/**/*.mp4', recursive=True)
+
+
 def prepare_videos():
     print('Making thumbnails...')
-    for x in glob.glob('static/**/*.mp4', recursive=True):
+    for x in get_videos():
         thumbnail = '{}.gif'.format(x)
         command = 'ffmpeg -hide_banner -loglevel error -y -ss 00:01:00 -t 5 -i {} -s 200x100 -r 5 {}'.format(x, thumbnail)
         os.path.exists(thumbnail) or os.system(command)
         print('   ', thumbnail)
 
-    with open('static/videos.js', 'w') as s:
-        videos_list = json.dumps([x.replace('static/videos/', '') for x in glob.glob('static/**/*.mp4', recursive=True)])
-        s.write('let videos = {};'.format(videos_list))
-
 
 @app.route('/')
 def main_page():
-    return render_template('video.html')
+    return render_template(
+        'video.html',
+        videos=[x.replace('\\', '/').replace('static/videos/', '') for x in get_videos()]
+    )
 
 
 @app.route('/video/<path:video_file>')
